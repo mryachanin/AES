@@ -49,42 +49,42 @@ public abstract class Functions {
 	
 	/**
 	 *  Returns the multiplicative inverse of polynomial b in the finite field 2^8
-	 *  0x00 maps to 0x00
+	 *  0 maps to 0
 	 *  
 	 *  @param poly  byte representing the polynomial to take the inverse of
 	 *  @return      byte representing the inverse of the polynomial passed in
 	 */
-	protected byte getMultInverse(byte poly) {
-		if (poly == 0x00) {
-			return 0x00;
+	protected byte getMultInverse(int poly) {
+		if (poly == 0) {
+			return 0;
 		}
 		int[][] algMatrix = new int[2][3];
 		
 		algMatrix[0][0] = 0x011b;
-		algMatrix[0][1] = 0x01;
-		algMatrix[0][2] = 0x00;
+		algMatrix[0][1] = 1;
+		algMatrix[0][2] = 0;
 		
 		algMatrix[1][0] = poly;
-		algMatrix[1][1] = 0x00;
-		algMatrix[1][2] = 0x01;
+		algMatrix[1][1] = 0;
+		algMatrix[1][2] = 1;
 		
-		int highestBit0 = findHighestBitSet(algMatrix[0][0],9);
-		int highestBit1 = findHighestBitSet(algMatrix[1][0],8);
-		do {
+		while (algMatrix[0][0] != 1 && algMatrix[1][0] != 1) {
+			int highestBit0 = findHighestBitSet(algMatrix[0][0],9);	
+			int highestBit1 = findHighestBitSet(algMatrix[1][0],8);
 			int diff = highestBit0 - highestBit1;
-
+			
 			if (diff > 0) {
 				algMatrix[0][0] ^= xtimes(algMatrix[1][0], diff);
 				algMatrix[0][1] ^= xtimes(algMatrix[1][1], diff);
 				algMatrix[0][2] ^= xtimes(algMatrix[1][2], diff);
 			}
-			if (diff < 0) {
+			else if (diff < 0) {
 				algMatrix[1][0] ^= xtimes(algMatrix[0][0], (diff * -1));
 				algMatrix[1][1] ^= xtimes(algMatrix[0][1], (diff * -1));
 				algMatrix[1][2] ^= xtimes(algMatrix[0][2], (diff * -1));
 			}
-			if (diff == 0) {
-				if (algMatrix[0][2] > algMatrix[1][2]) {
+			else {														// diff == 0
+				if (algMatrix[0][0] >  algMatrix[1][0]) {
 					algMatrix[0][0] ^= algMatrix[1][0];
 					algMatrix[0][1] ^= algMatrix[1][1];
 					algMatrix[0][2] ^= algMatrix[1][2];
@@ -96,11 +96,11 @@ public abstract class Functions {
 				}
 			}
 			
-			highestBit0 = findHighestBitSet(algMatrix[0][0],8);	
-			highestBit1 = findHighestBitSet(algMatrix[1][0],8);
-		} while ((byte)(algMatrix[0][0]) != 0 && (byte)(algMatrix[1][0]) != 0);
-
-		if (algMatrix[0][0] > 0x00 || (byte)algMatrix[1][2] == 0x1b) {
+			algMatrix[0][0] &= 0xff;									// fixes java's impulsive nature to sign extend
+			algMatrix[1][0] &= 0xff;
+		}
+		
+		if (algMatrix[0][0] == 1) {
 			return (byte)algMatrix[0][2];
 		}
 
