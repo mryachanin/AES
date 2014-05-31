@@ -37,13 +37,13 @@ public class AES {
 			key = new byte[16];
 			rand.nextBytes(key);
 		}
-		if (key.length == 16) {
+		if (key.length == 32) {
 			this.key = new Key(key, Nb, Nr, Nk);
 		}
-		else if (key.length == 24) {
+		else if (key.length == 48) {
 			this.key = new Key(key, 6, 12, Nk);
 		}
-		else if (key.length == 32) {
+		else if (key.length == 64) {
 			this.key = new Key(key, 8, 14, Nk);
 		}
 		else {
@@ -121,7 +121,6 @@ public class AES {
 		int decryptedLength = cipher.length;
 		byte[] decrypted = new byte[decryptedLength];
 		
-		
 		for (int i = 0; i < cipher.length; i += 16) {						// break up the byte array into 16-byte 2d arrays
 			this.state = new State(Arrays.copyOfRange(cipher, i, i + 16));
 
@@ -175,6 +174,7 @@ public class AES {
 			aes = new AES(args[1].getBytes());
 		}
 		byte[] cipher = aes.encrypt(args[0].getBytes());
+		//byte[] cipher = aes.encrypt(Functions.hexStringToByteArray("00112233445566778899aabbccddeeff"));
 		//byte[] cipher = aes.encrypt(new String("<Insert generic super duper secret private message here#!@#$%!@$@!%>").getBytes());
 		//byte[] cipher = aes.encrypt(hexStringToByteArray("00000000000000000000000000000000"));
 		System.out.println("Cipher:  " + Functions.bytesToHex(cipher));

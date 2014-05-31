@@ -151,7 +151,21 @@ public abstract class Functions {
 	 *  @param in  4 byte word
 	 *  @return    input passed through S-box
 	 */
-	protected byte subWord(byte in) {
+	protected byte[] subWord(byte[] in) {
+		for (int i = 0; i < 4; i++) {
+			in[i] = s_box(in[i]);
+		}
+		return in;
+	}
+	
+	
+	/**
+	 *  Takes a byte and applies the S-box
+	 *  
+	 *  @param in  byte
+	 *  @return    input passed through S-box
+	 */
+	protected byte s_box(byte in) {
 		byte c = 0x63;
 		byte inv = getMultInverse(in);
 		byte val = inv;

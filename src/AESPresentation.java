@@ -106,8 +106,10 @@ public class AESPresentation {
 	 *  				of the main functions used in AES
 	 */
 	public static void main(String[] args) {
-		byte[] testBytes = Functions.hexStringToByteArray("00112233445566778899aabbccddeeff");
-		byte[] testKey = Functions.hexStringToByteArray("01010101010101010101010101010101");
+		//byte[] testBytes = Functions.hexStringToByteArray("00112233445566778899aabbccddeeff");
+		byte[] testBytes = Functions.hexStringToByteArray("00102030405060708090a0b0c0d0e0f0");
+		//byte[] testKey = Functions.hexStringToByteArray("01010101010101010101010101010101");
+		byte[] testKey = Functions.hexStringToByteArray("73576245245357634126541754748133");
 		AESPresentation aes = new AESPresentation(testBytes);
 		
 		System.out.println("Initial Input: " + Functions.bytesToHex(testBytes));

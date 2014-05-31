@@ -7,32 +7,33 @@ import java.util.Arrays;
 public class Key extends Functions {
 	private byte[] key;
 	private int keyCount;
-	private int Nr;
+	private int Nb, Nr, Nk;
 	
 	/**
 	 *  Construct the key
 	 * 
 	 *  @param key  bytes representing the key
-	 *  @param Nb   number of columns
+	 *  @param Nb   Number of columns (32-bit words) comprising the State. For this standard, Nb = 4
 	 *  @param Nr   Number of rounds
 	 *  @param Nk   Number of 32 bit words comprising the cipher key
 	 */
 	public Key(byte[] key, int Nb, int Nr, int Nk) {
-		this.key  = new byte[4 * Nb * (Nr + 1)];
+		this.key  = new byte[4 * Nk * (Nr + 1)];
 		this.keyCount = 0;
+		this.Nb = Nb;
 		this.Nr = Nr;
+		this.Nk = Nk;
 		
-		keyExpansion(key, Nb, Nk);
+		keyExpansion(key);
 	}
 	
 	
 	/**
 	 * 
 	 *  @param key  bytes representing the initial key
-	 *  @param Nb   number of columns
 	 *  @param Nk   Number of 32 bit words comprising the cipher key
 	 */
-	private void keyExpansion(byte[] key, int Nb, int Nk) {
+	private void keyExpansion(byte[] key) {
 		byte[] temp = new byte[4];
 		
 		int i = 0;
@@ -42,6 +43,8 @@ public class Key extends Functions {
 			i++;
 		}
 		
+		System.out.println("Initial key: " + Functions.bytesToHex(this.key));
+		
 		i = Nk;
 		
 		while (i < Nb * (Nr + 1)) {
@@ -50,10 +53,11 @@ public class Key extends Functions {
 			}
 			
 			if (i % Nk == 0) {
-				temp = xorWords(s_box(rotWord(temp,1)),rCon(i/Nk));	
+				temp = subWord(rotWord(temp,1));
+				temp = xorWords(temp, rCon(i/Nk));
 			}
 			else if (Nk > 6 && (i % Nk) == 4) {
-				temp = s_box(temp);
+				temp = subWord(temp);
 			}
 			for (int k = 4*i; k < (4*i) + 4; k++) {
 				this.key[k] = (byte)(this.key[k - (4*Nk)] ^ temp[k % (4*i)]);				// k % 4*i produces 0, 1, 2, 3
@@ -73,13 +77,14 @@ public class Key extends Functions {
 	private byte[] rCon(int pow) {
 		byte[] roundConstant = new byte[4];
 		byte xPow = 0x01;
-		for (int i = 0; i < pow; i++) {
+		for (int i = 0; i < (pow - 1); i++) {
 			xPow = xtime(xPow);
 		}
-		roundConstant[0] = 0x00;
+		roundConstant[0] = xPow;
 		roundConstant[1] = 0x00;
 		roundConstant[2] = 0x00;
-		roundConstant[3] = xPow;
+		roundConstant[3] = 0x00;
+		
 		return roundConstant;
 	}
 	
@@ -93,26 +98,12 @@ public class Key extends Functions {
 	 */
 	private byte[] xorWords(byte[] word1, byte[] word2) {
 		byte[] result = new byte[4];
-		
+
 		for (int i = 0; i < 4; i++) {
 			result[i] = (byte)(word1[i] ^ word2[i]);
 		}
 		
 		return result;
-	}
-	
-	
-	/**
-	 *  Takes a 4-byte input word and applies the S-box
-	 *  
-	 *  @param in  4 byte word
-	 *  @return    input passed through S-box
-	 */
-	private byte[] s_box(byte[] in) {
-		for (int i = 0; i < 4; i++) {
-			in[i] = subWord(in[i]);
-		}
-		return in;
 	}
 	
 	
@@ -149,6 +140,6 @@ public class Key extends Functions {
 	
 	
 	public void resetDecryptCounter() {
-		keyCount = 16 * (Nr + 1);
+		keyCount = 4 * Nk * (Nr + 1);
 	}
 }

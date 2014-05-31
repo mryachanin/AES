@@ -24,7 +24,7 @@ public class State extends Functions {
 	public void subBytes() {
 		for (int i = 0; i < 4; i++) {
 			for (int k = 0; k < 4; k++) {
-				state[k][i] = subWord(state[k][i]);
+				state[k][i] = s_box(state[k][i]);
 			}
 		}
 	}
