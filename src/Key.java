@@ -31,7 +31,6 @@ public class Key extends Functions {
 	/**
 	 * 
 	 *  @param key  bytes representing the initial key
-	 *  @param Nk   Number of 32 bit words comprising the cipher key
 	 */
 	private void keyExpansion(byte[] key) {
 		byte[] temp = new byte[4];
@@ -140,6 +139,6 @@ public class Key extends Functions {
 	
 	
 	public void resetDecryptCounter() {
-		keyCount = 4 * Nk * (Nr + 1);
+		keyCount = 4 * Nb * (Nr + 1);
 	}
 }

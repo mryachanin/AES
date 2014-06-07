@@ -4,30 +4,22 @@ import java.util.Arrays;
 /**
  *  Implementation of AES
  *  
- *  NOTE: this key expansion implementation differs from the official spec
- *  		This is due to an elusive error but in the end, it does not affect
- *  		the ability to demonstrate the invertability of subBytes(), shiftRows()
- *  		mixColumns() and addRoundKey(). Obviously this is still a major error
- *  		and this implementation should not be used in anything that needs protection. 
- *  
  *  NOTE: if the message is not a multiple of 16-bytes, this will zero extend the end of the message
  *  		to a multiple of 16 bytes. For instance, if the message is 00112233, it will be decrypted
  *  		as 0011223300000000. This is not a problem with printing ASCII as '00' represents the null
  *  		character and signifies the end of a string anyways
- *  
- *  NOTE: please only use a 16 bit key. It sort of breaks with a 24 or 32 bit key
  */
 public class AES {
 														// these are for 128-bit
-	private static final int Nb = 4;					// Number of columns
-	private static final int Nk = 4;					// Number of 32 bit words comprising the cipher key
-	private static final int Nr = Nk + 6;				// Number of rounds
+	private final int Nb = 4;							// Number of columns (32 bit words) comprising the state
+	private int Nk;					            		// Number of 32 bit words comprising the cipher key
+	private final int Nr = Nk + 6;						// Number of rounds
 	private SecureRandom rand = new SecureRandom();
 	private Key key;
 	private State state;
 	
 	/**
-	 *  Takes in a 128-bit key to use as the symmetric key
+	 *  Takes in a 128, 296, or 256-bit key to use as the symmetric key
 	 *  If the key is null, this will generate a 128-bit key to use
 	 *  
 	 *  @param key
@@ -36,20 +28,21 @@ public class AES {
 		if (key == null) {
 			key = new byte[16];
 			rand.nextBytes(key);
-		}
-		if (key.length == 32) {
-			this.key = new Key(key, Nb, Nr, Nk);
-		}
-		else if (key.length == 48) {
-			this.key = new Key(key, 6, 12, Nk);
-		}
-		else if (key.length == 64) {
-			this.key = new Key(key, 8, 14, Nk);
+			this.Nk = 4;
 		}
 		else {
-			System.out.println("Invalid key size");
-			System.exit(1);
+			int key_len = key.length;
+			System.out.println("Key Length: " + key_len);
+			
+			if (key_len == 32 || key_len == 48 || key_len == 64) {
+				this.Nk = key_len / 8;
+			}
+			else {
+				System.out.println("Invalid key size");
+				System.exit(1);
+			}
 		}
+		this.key = new Key(key, Nb, Nr, Nk);
 	}
 	
 	/** 
@@ -163,7 +156,7 @@ public class AES {
 	public static void main(String[] args) {
 		if (args.length < 1) {
 			System.out.println("Usage: <message> <key>");
-			System.out.println("The message can be any length but the key must be 16 charactors long.");
+			System.out.println("The message can be any length but the key must be 16, 24, or 32 charactors long.");
 			System.exit(1);
 		}
 		AES aes;
