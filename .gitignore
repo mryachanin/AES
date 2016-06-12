@@ -1,0 +1,6 @@
+bin/
+*.jar
+
+# eclipse
+.classpath
+.project
