@@ -3,7 +3,7 @@ public class State extends Functions {
 	private byte[][] state;
 	
 	/**
-	 *  Takes in an array of 128 bytes and forms a state array
+	 *  Takes in an array of 16 bytes and forms a state array
 	 * 
 	 *  @param b  bytes taken in
 	 */
