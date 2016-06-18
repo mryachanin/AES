@@ -36,4 +36,21 @@ public class StringHelper {
         }
         return data;
     }
+
+    /**
+     * Returns a pretty hex representation of a 2D array.
+     */
+    public static String prettify2DArrayAsHex(byte[][] arr) {
+        StringBuffer buff = new StringBuffer();
+        buff.append("_______________\n");
+        for (byte[] element : arr) {
+            buff.append("| ");
+            for (byte element2 : element) {
+                buff.append(String.format("%02X", element2) + " ");
+            }
+            buff.append("|\n");
+        }
+        buff.append("|_____________|\n");
+        return buff.toString();
+    }
 }

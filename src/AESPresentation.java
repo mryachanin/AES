@@ -22,9 +22,9 @@ public class AESPresentation {
      */
     public void demoSubBytes() {
         System.out.println("#### Sub Bytes ####");
-        state.prettyPrint();
+        System.out.println(state);
         state.subBytes();
-        state.prettyPrint();
+        System.out.println(state);
     }
 
     /**
@@ -32,9 +32,9 @@ public class AESPresentation {
      */
     public void demoInvSubBytes() {
         System.out.println("#### Invert Sub Bytes ####");
-        state.prettyPrint();
+        System.out.println(state);
         state.invSubBytes();
-        state.prettyPrint();
+        System.out.println(state);
     }
 
     /**
@@ -42,9 +42,9 @@ public class AESPresentation {
      */
     public void demoShiftRows() {
         System.out.println("#### Shift Rows ####");
-        state.prettyPrint();
+        System.out.println(state);
         state.shiftRows();
-        state.prettyPrint();
+        System.out.println(state);
     }
 
     /**
@@ -52,9 +52,9 @@ public class AESPresentation {
      */
     public void demoInvShiftRows() {
         System.out.println("#### Invert Shift Rows ####");
-        state.prettyPrint();
+        System.out.println(state);
         state.invShiftRows();
-        state.prettyPrint();
+        System.out.println(state);
     }
 
     /**
@@ -62,9 +62,9 @@ public class AESPresentation {
      */
     public void demoMixColumns() {
         System.out.println("#### Mix Columns ####");
-        state.prettyPrint();
+        System.out.println(state);
         state.mixColumns();
-        state.prettyPrint();
+        System.out.println(state);
     }
 
     /**
@@ -72,9 +72,9 @@ public class AESPresentation {
      */
     public void demoInvMixColumns() {
         System.out.println("#### Invert Mix Columns ####");
-        state.prettyPrint();
+        System.out.println(state);
         state.invMixColumns();
-        state.prettyPrint();
+        System.out.println(state);
     }
 
     /**
@@ -84,9 +84,9 @@ public class AESPresentation {
      */
     public void demoAddRoundKey(byte[] key) {
         System.out.println("#### Add Round Key ####");
-        state.prettyPrint();
+        System.out.println(state);
         state.addRoundKey(key);
-        state.prettyPrint();
+        System.out.println(state);
     }
 
     /**
