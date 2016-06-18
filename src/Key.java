@@ -18,7 +18,7 @@ public class Key extends Functions {
 	 *  @param Nk   Number of 32 bit words comprising the cipher key
 	 */
 	public Key(byte[] key, int Nb, int Nr, int Nk) {
-		this.key  = new byte[4 * Nk * (Nr + 1)];
+		this.key  = new byte[4 * Nb * (Nr + 1)];
 		this.keyCount = 0;
 		this.Nb = Nb;
 		this.Nr = Nr;
