@@ -37,20 +37,7 @@ public class AES {
         for (int i = 0; i < message.length; i += 16) {
             State state = new State(Arrays.copyOfRange(message, i, i + 16));
 
-            state.addRoundKey(m_key.getKey());
-            for (int k = 0; k < (m_key.Nr - 1); k++) {
-                state.subBytes();
-                state.shiftRows();
-                state.mixColumns();
-                state.addRoundKey(m_key.getKey());
-            }
-
-            // final round does not include mixColumns()
-            state.subBytes();
-            state.shiftRows();
-            state.addRoundKey(m_key.getKey());
-
-            byte[] stateBytes = state.getBytes();
+            byte[] stateBytes = encryptState(state, m_key).getBytes();
             for (int n = 0; n < 16; n++) {
                 encrypted[i + n] = stateBytes[n];
             }
@@ -60,6 +47,22 @@ public class AES {
         }
 
         return encrypted;
+    }
+
+    private static State encryptState(State state, Key key) {
+        state.addRoundKey(key.getKey());
+        for (int k = 0; k < (key.Nr - 1); k++) {
+            state.subBytes();
+            state.shiftRows();
+            state.mixColumns();
+            state.addRoundKey(key.getKey());
+        }
+
+        // final round does not include mixColumns()
+        state.subBytes();
+        state.shiftRows();
+        state.addRoundKey(key.getKey());
+        return state;
     }
 
     /**
@@ -80,20 +83,7 @@ public class AES {
         for (int i = 0; i < cipher.length; i += 16) {
             State state = new State(Arrays.copyOfRange(cipher, i, i + 16));
 
-            state.addRoundKey(m_key.getDecryptKey());
-            for (int k = 0; k < (m_key.Nr - 1); k++) {
-                state.invShiftRows();
-                state.invSubBytes();
-                state.addRoundKey(m_key.getDecryptKey());
-                state.invMixColumns();
-            }
-
-            // final round does not include mixColumns()
-            state.invShiftRows();
-            state.invSubBytes();
-            state.addRoundKey(m_key.getDecryptKey());
-
-            byte[] stateBytes = state.getBytes();
+            byte[] stateBytes = decryptState(state, m_key).getBytes();
             for (int n = 0; n < 16; n++) {
                 decrypted[i + n] = stateBytes[n];
             }
@@ -103,6 +93,22 @@ public class AES {
         }
 
         return decrypted;
+    }
+
+    private static State decryptState(State state, Key key) {
+        state.addRoundKey(key.getDecryptKey());
+        for (int k = 0; k < (key.Nr - 1); k++) {
+            state.invShiftRows();
+            state.invSubBytes();
+            state.addRoundKey(key.getDecryptKey());
+            state.invMixColumns();
+        }
+
+        // final round does not include mixColumns()
+        state.invShiftRows();
+        state.invSubBytes();
+        state.addRoundKey(key.getDecryptKey());
+        return state;
     }
 
     private static Key getKey(byte[] key) {
