@@ -179,4 +179,29 @@ public class Functions {
     public static int xtimes(int poly, int n) {
         return (poly << n);
     }
+
+    /**
+     * Multiplies 2 bytes modulo x^4 + 1.
+     *
+     * @param a A single byte.
+     * @param s A single byte.
+     * @return (a)(s) (mod x^4 + 1).
+     */
+    public static byte mul(byte a, byte s) {
+        byte product = 0;
+        byte temp;
+
+        while (a != 0) {
+            if ((a & 0x01) != 0) {
+                product = (byte) (product ^ s);
+            }
+            temp = (byte) (s & 0x80);
+            s = (byte) (s << 0x01);
+            if (temp != 0) {
+                s = (byte) (s ^ 0x1b);
+            }
+            a = (byte) ((a & 0xff) >> 1);
+        }
+        return product;
+    }
 }

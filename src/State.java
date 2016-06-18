@@ -94,10 +94,10 @@ public class State {
     public void mixColumns() {
         byte[] tmp = new byte[4];
         for (int c = 0; c < 4; c++) {
-            tmp[0] = (byte) ((mul((byte) 0x02, state[0][c])) ^ (mul((byte) 0x03, state[1][c])) ^ state[2][c] ^ state[3][c]);
-            tmp[1] = (byte) (state[0][c] ^ (mul((byte) 0x02, state[1][c])) ^ (mul((byte) 0x03, state[2][c])) ^ state[3][c]);
-            tmp[2] = (byte) (state[0][c] ^ state[1][c] ^ (mul((byte) 0x02, state[2][c])) ^ (mul((byte) 0x03, state[3][c])));
-            tmp[3] = (byte) ((mul((byte) 0x03, state[0][c])) ^ state[1][c] ^ state[2][c] ^ (mul((byte) 0x02, state[3][c])));
+            tmp[0] = (byte) ((Functions.mul((byte) 0x02, state[0][c])) ^ (Functions.mul((byte) 0x03, state[1][c])) ^ state[2][c] ^ state[3][c]);
+            tmp[1] = (byte) (state[0][c] ^ (Functions.mul((byte) 0x02, state[1][c])) ^ (Functions.mul((byte) 0x03, state[2][c])) ^ state[3][c]);
+            tmp[2] = (byte) (state[0][c] ^ state[1][c] ^ (Functions.mul((byte) 0x02, state[2][c])) ^ (Functions.mul((byte) 0x03, state[3][c])));
+            tmp[3] = (byte) ((Functions.mul((byte) 0x03, state[0][c])) ^ state[1][c] ^ state[2][c] ^ (Functions.mul((byte) 0x02, state[3][c])));
             for (int i = 0; i < 4; i++) {
                 state[i][c] = tmp[i];
             }
@@ -110,10 +110,14 @@ public class State {
     public void invMixColumns() {
         byte[] tmp = new byte[4];
         for (int c = 0; c < 4; c++) {
-            tmp[0] = (byte) ((mul((byte) 0x0e, state[0][c])) ^ (mul((byte) 0x0b, state[1][c])) ^ (mul((byte) 0x0d, state[2][c])) ^ (mul((byte) 0x09, state[3][c])));
-            tmp[1] = (byte) ((mul((byte) 0x09, state[0][c])) ^ (mul((byte) 0x0e, state[1][c])) ^ (mul((byte) 0x0b, state[2][c])) ^ (mul((byte) 0x0d, state[3][c])));
-            tmp[2] = (byte) ((mul((byte) 0x0d, state[0][c])) ^ (mul((byte) 0x09, state[1][c])) ^ (mul((byte) 0x0e, state[2][c])) ^ (mul((byte) 0x0b, state[3][c])));
-            tmp[3] = (byte) ((mul((byte) 0x0b, state[0][c])) ^ (mul((byte) 0x0d, state[1][c])) ^ (mul((byte) 0x09, state[2][c])) ^ (mul((byte) 0x0e, state[3][c])));
+            tmp[0] = (byte) ((Functions.mul((byte) 0x0e, state[0][c])) ^ (Functions.mul((byte) 0x0b, state[1][c])) ^ (Functions.mul((byte) 0x0d, state[2][c])) ^ (Functions
+                    .mul((byte) 0x09, state[3][c])));
+            tmp[1] = (byte) ((Functions.mul((byte) 0x09, state[0][c])) ^ (Functions.mul((byte) 0x0e, state[1][c])) ^ (Functions.mul((byte) 0x0b, state[2][c])) ^ (Functions
+                    .mul((byte) 0x0d, state[3][c])));
+            tmp[2] = (byte) ((Functions.mul((byte) 0x0d, state[0][c])) ^ (Functions.mul((byte) 0x09, state[1][c])) ^ (Functions.mul((byte) 0x0e, state[2][c])) ^ (Functions
+                    .mul((byte) 0x0b, state[3][c])));
+            tmp[3] = (byte) ((Functions.mul((byte) 0x0b, state[0][c])) ^ (Functions.mul((byte) 0x0d, state[1][c])) ^ (Functions.mul((byte) 0x09, state[2][c])) ^ (Functions
+                    .mul((byte) 0x0e, state[3][c])));
             for (int i = 0; i < 4; i++) {
                 state[i][c] = tmp[i];
             }
@@ -131,31 +135,6 @@ public class State {
                 state[k][i] = (byte) (state[k][i] ^ key[k + (4 * i)]);
             }
         }
-    }
-
-    /**
-     * Multiplies 2 bytes modulo x^4 + 1.
-     *
-     * @param a A single byte.
-     * @param s A single byte.
-     * @return (a)(s) (mod x^4 + 1).
-     */
-    protected byte mul(byte a, byte s) {
-        byte product = 0;
-        byte temp;
-
-        while (a != 0) {
-            if ((a & 0x01) != 0) {
-                product = (byte) (product ^ s);
-            }
-            temp = (byte) (s & 0x80);
-            s = (byte) (s << 0x01);
-            if (temp != 0) {
-                s = (byte) (s ^ 0x1b);
-            }
-            a = (byte) ((a & 0xff) >> 1);
-        }
-        return product;
     }
 
     public static int[] invS_Box = { 0x52, 0x09, 0x6a, 0xd5, 0x30, 0x36, 0xa5, 0x38, 0xbf, 0x40, 0xa3, 0x9e, 0x81, 0xf3, 0xd7, 0xfb, 0x7c, 0xe3, 0x39, 0x82, 0x9b,
