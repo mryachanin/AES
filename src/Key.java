@@ -8,10 +8,10 @@ public class Key extends Functions {
 	private byte[] key;
 	private int keyCount;
 	private int Nb, Nr, Nk;
-	
+
 	/**
 	 *  Construct the key
-	 * 
+	 *
 	 *  @param key  bytes representing the key
 	 *  @param Nb   Number of columns (32-bit words) comprising the State. For this standard, Nb = 4
 	 *  @param Nr   Number of rounds
@@ -23,34 +23,32 @@ public class Key extends Functions {
 		this.Nb = Nb;
 		this.Nr = Nr;
 		this.Nk = Nk;
-		
+
 		keyExpansion(key);
 	}
-	
-	
+
+
 	/**
-	 * 
+	 *
 	 *  @param key  bytes representing the initial key
 	 */
 	private void keyExpansion(byte[] key) {
 		byte[] temp = new byte[4];
-		
+
 		int i = 0;
-		
+
 		while (i < 4*Nk) {
 			this.key[i] = key[i];
 			i++;
 		}
-		
-		System.out.println("Initial key: " + Functions.bytesToHex(this.key));
-		
+
 		i = Nk;
-		
+
 		while (i < Nb * (Nr + 1)) {
 			for (int tmp = 0; tmp < 4; tmp++) {
 				temp[tmp] = this.key[((i-1) * 4) + tmp];
 			}
-			
+
 			if (i % Nk == 0) {
 				temp = subWord(rotWord(temp,1));
 				temp = xorWords(temp, rCon(i/Nk));
@@ -64,14 +62,19 @@ public class Key extends Functions {
 			i++;
 		}
 	}
-	
-	
+
+
+	public byte[] getExpandedKey() {
+		return this.key;
+	}
+
+
 	/**
 	 *  Takes int representing the power of x + 1
-	 *  
+	 *
 	 * @param pow  power of x + 1
 	 * @return     word representing {xPow}{00}{00}{00}
-	 * 
+	 *
 	 */
 	private byte[] rCon(int pow) {
 		byte[] roundConstant = new byte[4];
@@ -83,14 +86,14 @@ public class Key extends Functions {
 		roundConstant[1] = 0x00;
 		roundConstant[2] = 0x00;
 		roundConstant[3] = 0x00;
-		
+
 		return roundConstant;
 	}
-	
-	
+
+
 	/**
 	 *  Takes in 2 words and xor's them
-	 *  
+	 *
 	 *  @param word1  first word
 	 *  @param word2  second word
 	 *  @return       new word with new[i] = word1[i] xor word2[i]
@@ -101,14 +104,14 @@ public class Key extends Functions {
 		for (int i = 0; i < 4; i++) {
 			result[i] = (byte)(word1[i] ^ word2[i]);
 		}
-		
+
 		return result;
 	}
-	
-	
+
+
 	/**
 	 *  returns the next 16 bytes of the expanded key
-	 *  
+	 *
 	 *  @return  next 16 bites of the expanded key
 	 */
 	public byte[] getKey() {
@@ -116,11 +119,11 @@ public class Key extends Functions {
 		keyCount += 16;
 		return keyPart;
 	}
-	
-	
+
+
 	/**
 	 *  returns the previous 16 bytes of the expanded key
-	 *  
+	 *
 	 *  @return  previous 16 bites of the expanded key
 	 */
 	public byte[] getDecryptKey() {
@@ -128,16 +131,16 @@ public class Key extends Functions {
 		keyCount -= 16;
 		return keyPart;
 	}
-	
-	
+
+
 	/**
 	 *  Resets the index counter so the key can be used again to encrypt the next 16-bytes
 	 */
 	public void resetCounter() {
 		keyCount = 0;
 	}
-	
-	
+
+
 	public void resetDecryptCounter() {
 		keyCount = 4 * Nb * (Nr + 1);
 	}
