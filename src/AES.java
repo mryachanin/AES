@@ -13,7 +13,7 @@ public class AES {
 														// these are for 128-bit
 	private final int Nb = 4;							// Number of columns (32 bit words) comprising the state
 	private int Nk;					            		// Number of 32 bit words comprising the cipher key
-	private final int Nr = Nk + 6;						// Number of rounds
+    private int Nr;                                     // Number of rounds
 	private SecureRandom rand = new SecureRandom();
 	private Key key;
 	private State state;
@@ -33,9 +33,10 @@ public class AES {
 		else {
 			int key_len = key.length;
 			System.out.println("Key Length: " + key_len);
-			
-			if (key_len == 32 || key_len == 48 || key_len == 64) {
-				this.Nk = key_len / 8;
+
+            if (key_len == 16 || key_len == 24 || key_len == 32) {
+                this.Nk = key_len / 4;
+                this.Nr = Nk + 6;
 			}
 			else {
 				System.out.println("Invalid key size");
