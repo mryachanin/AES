@@ -18,21 +18,6 @@ public abstract class Functions {
     }
 
     /**
-     * Converts a byte array to a string representation of the hex values
-     *
-     * @param bytes - byte[] containing some hex values
-     * @return - String representing the byte[]
-     */
-    public static String bytesToHex(byte[] bytes) {
-        StringBuffer result = new StringBuffer();
-        for (byte b : bytes) {
-            result.append(String.format("%02X", b));
-        }
-        return result.toString();
-
-    }
-
-    /**
      * Checks if a certain bit of a polynomial is set (0 indexed)
      *
      * @param poly polynomial to check
@@ -97,21 +82,6 @@ public abstract class Functions {
         }
 
         return (byte) algMatrix[1][2];
-    }
-
-    /**
-     * Converts a String to a byte array representation keeping the hex values integrity
-     *
-     * @param s - String to convert
-     * @return - byte[] representation of the String
-     */
-    public static byte[] hexStringToByteArray(String s) {
-        int len = s.length();
-        byte[] data = new byte[len / 2];
-        for (int i = 0; i < len; i += 2) {
-            data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4) + Character.digit(s.charAt(i + 1), 16));
-        }
-        return data;
     }
 
     /**

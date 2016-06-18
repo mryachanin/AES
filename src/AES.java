@@ -1,6 +1,8 @@
 import java.security.SecureRandom;
 import java.util.Arrays;
 
+import utils.StringHelper;
+
 /**
  * Implementation of AES
  *
@@ -67,21 +69,21 @@ public class AES {
         for (int i = 0; i < message.length; i += 16) { // break up the byte array into 16-byte 2d arrays
             this.state = new State(Arrays.copyOfRange(message, i, i + 16));
 
-            System.out.println("round[" + 0 + "].initial: " + "state: " + Functions.bytesToHex(state.getBytes()));
+            System.out.println("round[" + 0 + "].initial: " + "state: " + StringHelper.bytesToHex(state.getBytes()));
             byte[] nextKey = key.getKey();
-            System.out.println(Functions.bytesToHex(nextKey));
+            System.out.println(StringHelper.bytesToHex(nextKey));
             state.addRoundKey(nextKey);
 
             for (int k = 0; k < (Nr - 1); k++) {
-                System.out.println("round[" + k + "].start: " + "state: " + Functions.bytesToHex(state.getBytes()));
+                System.out.println("round[" + k + "].start: " + "state: " + StringHelper.bytesToHex(state.getBytes()));
                 state.subBytes();
-                System.out.println("round[" + k + "].s_box: " + "state: " + Functions.bytesToHex(state.getBytes()));
+                System.out.println("round[" + k + "].s_box: " + "state: " + StringHelper.bytesToHex(state.getBytes()));
                 state.shiftRows();
-                System.out.println("round[" + k + "].s_row: " + "state: " + Functions.bytesToHex(state.getBytes()));
+                System.out.println("round[" + k + "].s_row: " + "state: " + StringHelper.bytesToHex(state.getBytes()));
                 state.mixColumns();
-                System.out.println("round[" + k + "].m_col: " + "state: " + Functions.bytesToHex(state.getBytes()));
+                System.out.println("round[" + k + "].m_col: " + "state: " + StringHelper.bytesToHex(state.getBytes()));
                 nextKey = key.getKey();
-                System.out.println(Functions.bytesToHex(nextKey));
+                System.out.println(StringHelper.bytesToHex(nextKey));
                 state.addRoundKey(nextKey);
             }
 
@@ -164,7 +166,7 @@ public class AES {
         // byte[] cipher = aes.encrypt(Functions.hexStringToByteArray("00112233445566778899aabbccddeeff"));
         // byte[] cipher = aes.encrypt(new String("<Insert generic super duper secret private message here#!@#$%!@$@!%>").getBytes());
         // byte[] cipher = aes.encrypt(hexStringToByteArray("00000000000000000000000000000000"));
-        System.out.println("Cipher:  " + Functions.bytesToHex(cipher));
+        System.out.println("Cipher:  " + StringHelper.bytesToHex(cipher));
         System.out.println("Message: " + new String(aes.decrypt(cipher)));
     }
 }

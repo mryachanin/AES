@@ -1,3 +1,5 @@
+import utils.StringHelper;
+
 /**
  *
  * Class to test AES functions and display their output in a human readable manner
@@ -93,14 +95,14 @@ public class AESPresentation {
      * @param args - not used; This is simply for demonstrating the operations (state before / after) of the main functions used in AES
      */
     public static void main(String[] args) {
-        // byte[] testBytes = Functions.hexStringToByteArray("00112233445566778899aabbccddeeff");
-        byte[] testBytes = Functions.hexStringToByteArray("00102030405060708090a0b0c0d0e0f0");
-        // byte[] testKey = Functions.hexStringToByteArray("01010101010101010101010101010101");
-        byte[] testKey = Functions.hexStringToByteArray("73576245245357634126541754748133");
+        // byte[] testBytes = StringHelper.hexStringToByteArray("00112233445566778899aabbccddeeff");
+        byte[] testBytes = StringHelper.hexStringToByteArray("00102030405060708090a0b0c0d0e0f0");
+        // byte[] testKey = StringHelper.hexStringToByteArray("01010101010101010101010101010101");
+        byte[] testKey = StringHelper.hexStringToByteArray("73576245245357634126541754748133");
         AESPresentation aes = new AESPresentation(testBytes);
 
-        System.out.println("Initial Input: " + Functions.bytesToHex(testBytes));
-        System.out.println("Initial Key:   " + Functions.bytesToHex(testKey));
+        System.out.println("Initial Input: " + StringHelper.bytesToHex(testBytes));
+        System.out.println("Initial Key:   " + StringHelper.bytesToHex(testKey));
 
         System.out.println("\n\n");
         aes.demoSubBytes();
