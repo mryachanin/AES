@@ -140,33 +140,4 @@ public class AES {
 
         return decrypted;
     }
-
-    /**
-     * tests an encryption and decryption
-     *
-     * NOTE: if you insert "\0" anywhere in the string, java will treat this as the "null" character and end the string. The encryption / decryption still works
-     * fine, it just means that simply instantiating a new String is not sufficient. However, not many messages contain the literal '\0', so for the sake of
-     * simplicity, this "error" does exist.
-     *
-     * @param args args[0] = message args[1] = key (optional: if none is provided, a random 16-bit key will be generated and used)
-     */
-    public static void main(String[] args) {
-        if (args.length < 1) {
-            System.out.println("Usage: <message> <key>");
-            System.out.println("The message can be any length but the key must be 16, 24, or 32 charactors long.");
-            System.exit(1);
-        }
-        AES aes;
-        if (args.length < 2) {
-            aes = new AES();
-        } else {
-            aes = new AES(args[1].getBytes());
-        }
-        byte[] cipher = aes.encrypt(args[0].getBytes());
-        // byte[] cipher = aes.encrypt(Functions.hexStringToByteArray("00112233445566778899aabbccddeeff"));
-        // byte[] cipher = aes.encrypt(new String("<Insert generic super duper secret private message here#!@#$%!@$@!%>").getBytes());
-        // byte[] cipher = aes.encrypt(hexStringToByteArray("00000000000000000000000000000000"));
-        System.out.println("Cipher:  " + StringHelper.bytesToHex(cipher));
-        System.out.println("Message: " + new String(aes.decrypt(cipher)));
-    }
 }
