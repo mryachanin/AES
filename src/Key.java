@@ -7,22 +7,23 @@ import utils.Functions;
  *
  */
 public class Key {
+    // The number of columns (32-bit words) comprising a State
+    public static final int Nb = 4;
+    public final int Nr, Nk;
+
     private byte[] key;
     private int keyCount;
-    private int Nb, Nr, Nk;
 
     /**
      * Construct the key
      *
      * @param key bytes representing the key
-     * @param Nb Number of columns (32-bit words) comprising the State. For this standard, Nb = 4
      * @param Nr Number of rounds
      * @param Nk Number of 32 bit words comprising the cipher key
      */
-    public Key(byte[] key, int Nb, int Nr, int Nk) {
+    public Key(byte[] key, int Nr, int Nk) {
         this.key = new byte[4 * Nb * (Nr + 1)];
         this.keyCount = 0;
-        this.Nb = Nb;
         this.Nr = Nr;
         this.Nk = Nk;
 

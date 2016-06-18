@@ -26,7 +26,7 @@ public class KeyTest {
                 (byte) 0xda, (byte) 0xdb, (byte) 0x47, (byte) 0x9b, (byte) 0xa8, (byte) 0xf2, (byte) 0x20, (byte) 0xdf, (byte) 0x3d, (byte) 0x48, (byte) 0x58,
                 (byte) 0xf6, (byte) 0xb1 };
 
-        Key key = new Key(seed, 4, 10, 4);
+        Key key = new Key(seed, 10, 4);
         Assert.assertArrayEquals(expandedKey, key.getExpandedKey());
     }
 
@@ -57,7 +57,7 @@ public class KeyTest {
                 (byte) 0x1a, (byte) 0x78, (byte) 0xdc, (byte) 0x09, (byte) 0xc4, (byte) 0x18, (byte) 0xc2, (byte) 0x71, (byte) 0xe3, (byte) 0xa4, (byte) 0x1d,
                 (byte) 0x5d };
 
-        Key key = new Key(seed, 4, 12, 6);
+        Key key = new Key(seed, 12, 6);
         Assert.assertArrayEquals(expandedKey, key.getExpandedKey());
     }
 
@@ -90,7 +90,7 @@ public class KeyTest {
                 (byte) 0x2b, (byte) 0xaa, (byte) 0xcd, (byte) 0xf8, (byte) 0xcd, (byte) 0xea, (byte) 0x24, (byte) 0xfc, (byte) 0x79, (byte) 0xcc, (byte) 0xbf,
                 (byte) 0x09, (byte) 0x79, (byte) 0xe9, (byte) 0x37, (byte) 0x1a, (byte) 0xc2, (byte) 0x3c, (byte) 0x6d, (byte) 0x68, (byte) 0xde, (byte) 0x36 };
 
-        Key key = new Key(seed, 4, 14, 8);
+        Key key = new Key(seed, 14, 8);
         Assert.assertArrayEquals(expandedKey, key.getExpandedKey());
     }
 }

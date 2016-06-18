@@ -1,63 +1,28 @@
-import java.security.SecureRandom;
 import java.util.Arrays;
 
-import utils.StringHelper;
-
 /**
- * Implementation of AES
+ * An implementation of AES ECB mode.
  *
  * NOTE: if the message is not a multiple of 16-bytes, this will zero extend the end of the message to a multiple of 16 bytes. For instance, if the message is
  * 00112233, it will be decrypted as 0011223300000000. This is not a problem with printing ASCII as '00' represents the null character and signifies the end of a
- * string anyways
+ * string anyways.
  */
 public class AES {
-    // these are for 128-bit
-    private final int Nb = 4; // Number of columns (32 bit words) comprising the state
-    private int Nk; // Number of 32 bit words comprising the cipher key
-    private int Nr; // Number of rounds
-    private SecureRandom rand = new SecureRandom();
-    private Key key;
-    private State state;
 
     /**
-     * Takes in a 128, 296, or 256-bit key to use as the symmetric key If the key is null, this will generate a 128-bit key to use
-     *
-     * @param key
+     * Do not allow instantiation.
      */
-    public AES(byte[] key) {
-        if (key == null) {
-            key = new byte[16];
-            rand.nextBytes(key);
-            this.Nk = 4;
-        } else {
-            int key_len = key.length;
-            System.out.println("Key Length: " + key_len);
-
-            if (key_len == 16 || key_len == 24 || key_len == 32) {
-                this.Nk = key_len / 4;
-                this.Nr = Nk + 6;
-            } else {
-                System.out.println("Invalid key size");
-                System.exit(1);
-            }
-        }
-        this.key = new Key(key, Nb, Nr, Nk);
+    private AES() {
     }
 
     /**
-     * Key is not provided at the time of instantiation. Sets key to null and calls alternative constructor
-     */
-    public AES() {
-        this(null);
-    }
-
-    /**
-     * Takes in a message and encrypts it
+     * Takes a message and returns the resulting ciphertext.
      *
-     * @param m message to encrypt
-     * @return encrypted message
+     * @param m A message to encrypt.
+     * @param key A 128, 296, or 256-bit key to use as the symmetric key.
+     * @return The encrypted plaintext.
      */
-    public byte[] encrypt(byte[] message) {
+    public static byte[] encrypt(byte[] message, byte[] key) {
         int encryptedLength;
         if ((message.length % 16) == 0) {
             encryptedLength = message.length;
@@ -66,37 +31,31 @@ public class AES {
         }
         byte[] encrypted = new byte[encryptedLength];
 
-        for (int i = 0; i < message.length; i += 16) { // break up the byte array into 16-byte 2d arrays
-            this.state = new State(Arrays.copyOfRange(message, i, i + 16));
+        Key m_key = getKey(key);
 
-            System.out.println("round[" + 0 + "].initial: " + "state: " + StringHelper.bytesToHex(state.getBytes()));
-            byte[] nextKey = key.getKey();
-            System.out.println(StringHelper.bytesToHex(nextKey));
-            state.addRoundKey(nextKey);
+        // break up the byte array into 16-byte 2d arrays
+        for (int i = 0; i < message.length; i += 16) {
+            State state = new State(Arrays.copyOfRange(message, i, i + 16));
 
-            for (int k = 0; k < (Nr - 1); k++) {
-                System.out.println("round[" + k + "].start: " + "state: " + StringHelper.bytesToHex(state.getBytes()));
+            state.addRoundKey(m_key.getKey());
+            for (int k = 0; k < (m_key.Nr - 1); k++) {
                 state.subBytes();
-                System.out.println("round[" + k + "].s_box: " + "state: " + StringHelper.bytesToHex(state.getBytes()));
                 state.shiftRows();
-                System.out.println("round[" + k + "].s_row: " + "state: " + StringHelper.bytesToHex(state.getBytes()));
                 state.mixColumns();
-                System.out.println("round[" + k + "].m_col: " + "state: " + StringHelper.bytesToHex(state.getBytes()));
-                nextKey = key.getKey();
-                System.out.println(StringHelper.bytesToHex(nextKey));
-                state.addRoundKey(nextKey);
+                state.addRoundKey(m_key.getKey());
             }
 
-            state.subBytes(); // final round does not include mixColumns()
+            // final round does not include mixColumns()
+            state.subBytes();
             state.shiftRows();
-            state.addRoundKey(key.getKey());
+            state.addRoundKey(m_key.getKey());
 
             byte[] stateBytes = state.getBytes();
             for (int n = 0; n < 16; n++) {
                 encrypted[i + n] = stateBytes[n];
             }
             if ((i + 16) != encryptedLength) {
-                key.resetCounter();
+                m_key.resetCounter();
             }
         }
 
@@ -104,40 +63,58 @@ public class AES {
     }
 
     /**
-     * Takes in a cipher and decrypts it
+     * Takes a cipher and returns the resulting plaintext.
      *
-     * @param c cipher to decrypt
-     * @return decrypted message
+     * @param cipher The cipher to decrypt.
+     * @param key A 128, 296, or 256-bit key to use as the symmetric key.
+     * @return The decrypted ciphertext.
      */
-    public byte[] decrypt(byte[] cipher) {
+    public static byte[] decrypt(byte[] cipher, byte[] key) {
         int decryptedLength = cipher.length;
         byte[] decrypted = new byte[decryptedLength];
 
-        for (int i = 0; i < cipher.length; i += 16) { // break up the byte array into 16-byte 2d arrays
-            this.state = new State(Arrays.copyOfRange(cipher, i, i + 16));
+        Key m_key = getKey(key);
+        m_key.resetDecryptCounter();
 
-            state.addRoundKey(key.getDecryptKey());
+        // break up the byte array into 16-byte 2d arrays
+        for (int i = 0; i < cipher.length; i += 16) {
+            State state = new State(Arrays.copyOfRange(cipher, i, i + 16));
 
-            for (int k = 0; k < (Nr - 1); k++) {
+            state.addRoundKey(m_key.getDecryptKey());
+            for (int k = 0; k < (m_key.Nr - 1); k++) {
                 state.invShiftRows();
                 state.invSubBytes();
-                state.addRoundKey(key.getDecryptKey());
+                state.addRoundKey(m_key.getDecryptKey());
                 state.invMixColumns();
             }
 
-            state.invShiftRows(); // final round does not include mixColumns()
+            // final round does not include mixColumns()
+            state.invShiftRows();
             state.invSubBytes();
-            state.addRoundKey(key.getDecryptKey());
+            state.addRoundKey(m_key.getDecryptKey());
 
             byte[] stateBytes = state.getBytes();
             for (int n = 0; n < 16; n++) {
                 decrypted[i + n] = stateBytes[n];
             }
             if ((i + 16) != decryptedLength) {
-                key.resetDecryptCounter();
+                m_key.resetDecryptCounter();
             }
         }
 
         return decrypted;
+    }
+
+    private static Key getKey(byte[] key) {
+        int key_len = key.length;
+
+        if (key_len != 16 && key_len != 24 && key_len != 32) {
+            System.err.println("Invalid key size: " + key_len);
+            System.exit(1);
+        }
+
+        int Nk = key_len / 4;
+        int Nr = Nk + 6;
+        return new Key(key, Nr, Nk);
     }
 }
