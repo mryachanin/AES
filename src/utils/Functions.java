@@ -1,13 +1,20 @@
-public abstract class Functions {
+package utils;
+public class Functions {
 
     /**
-     * Finds the highest bit set to 1 in a polynomial
-     *
-     * @param algMatrix polynomial to test
-     * @param n number of bits to check
-     * @return highest bit set
+     * Do not allow instantiation.
      */
-    protected int findHighestBitSet(int algMatrix, int n) {
+    private Functions() {
+    }
+
+    /**
+     * Finds the highest bit set to 1 in a polynomial.
+     *
+     * @param algMatrix A polynomial to test.
+     * @param n The number of bits to check.
+     * @return The highest bit set.
+     */
+    public static int findHighestBitSet(int algMatrix, int n) {
         int highestBit = 0;
         for (int i = 0; i < n; i++) {
             if (isBitSet(algMatrix, i)) {
@@ -18,23 +25,23 @@ public abstract class Functions {
     }
 
     /**
-     * Checks if a certain bit of a polynomial is set (0 indexed)
+     * Checks if a certain bit of a polynomial is set (0 indexed).
      *
-     * @param poly polynomial to check
-     * @param bit bit to check
-     * @return true if bit is set; false otherwise
+     * @param poly A polynomial to check.
+     * @param bit The bit to check.
+     * @return True if the bit is set; false otherwise.
      */
-    protected boolean isBitSet(int poly, int bit) {
+    public static boolean isBitSet(int poly, int bit) {
         return (poly & (0x01 << bit)) != 0;
     }
 
     /**
-     * Returns the multiplicative inverse of polynomial b in the finite field 2^8 0 maps to 0
+     * Returns the multiplicative inverse of polynomial b in the finite field 2^8; 0 maps to 0.
      *
-     * @param poly byte representing the polynomial to take the inverse of
-     * @return byte representing the inverse of the polynomial passed in
+     * @param poly A byte representing the polynomial to take the inverse of.
+     * @return A byte representing the inverse of the polynomial passed in.
      */
-    protected byte getMultInverse(int poly) {
+    public static byte getMultInverse(int poly) {
         if (poly == 0) {
             return 0;
         }
@@ -85,13 +92,13 @@ public abstract class Functions {
     }
 
     /**
-     * Takes in a 4-byte word and rotates each byte to the left n times
+     * Takes in a 4-byte word and rotates each byte to the left n times.
      *
-     * @param array to rotate
-     * @param number of times to rotate
-     * @return rotated array
+     * @param An array to rotate.
+     * @param The number of times to rotate.
+     * @return The rotated array.
      */
-    protected byte[] rotWord(byte[] in, int n) {
+    public static byte[] rotWord(byte[] in, int n) {
         for (int i = 0; i < n; i++) {
             byte tmp = in[0];
             in[0] = in[1];
@@ -104,12 +111,12 @@ public abstract class Functions {
     }
 
     /**
-     * Takes a 4-byte input word and applies the S-box
+     * Takes a 4-byte input word and applies the S-box.
      *
-     * @param in 4 byte word
-     * @return input passed through S-box
+     * @param in A 4 byte word.
+     * @return The input passed through the S-box.
      */
-    protected byte[] subWord(byte[] in) {
+    public static byte[] subWord(byte[] in) {
         for (int i = 0; i < 4; i++) {
             in[i] = s_box(in[i]);
         }
@@ -117,12 +124,12 @@ public abstract class Functions {
     }
 
     /**
-     * Takes a byte and applies the S-box
+     * Takes a byte and applies the S-box.
      *
-     * @param in byte
-     * @return input passed through S-box
+     * @param in A single byte.
+     * @return The input passed through the S-box.
      */
-    protected byte s_box(byte in) {
+    public static byte s_box(byte in) {
         byte c = 0x63;
         byte inv = getMultInverse(in);
         byte val = inv;
@@ -148,12 +155,12 @@ public abstract class Functions {
     }
 
     /**
-     * Multiplies a polynomial by x in the finite field 2^8 {01}{1b} = 0
+     * Multiplies a polynomial by x in the finite field 2^8; {01}{1b} = 0.
      *
-     * @param poly byte representing the polynomial to multiply by 'x'
-     * @return byte representing (poly)(x) in finite field 2^8
+     * @param poly A byte representing the polynomial to multiply by 'x'.
+     * @return A byte representing (poly)(x) in finite field 2^8.
      */
-    protected byte xtime(byte poly) {
+    public static byte xtime(byte poly) {
         byte b = (byte) (poly << 1);
         byte mask = 0x1b;
         if (isBitSet(poly, 7)) {
@@ -165,11 +172,11 @@ public abstract class Functions {
     /**
      * Multiplies a polynomial by 'x' n times This is used for getting the multiplicative inverse and does not need to reduce with respect to the mod.
      *
-     * @param poly polynomial to multiply
-     * @param n number of times to multiply polynomial by 'x'
-     * @return new polynomial
+     * @param poly A polynomial to multiply.
+     * @param n The number of times to multiply the polynomial by 'x'.
+     * @return The new polynomial.
      */
-    protected int xtimes(int poly, int n) {
+    public static int xtimes(int poly, int n) {
         return (poly << n);
     }
 }

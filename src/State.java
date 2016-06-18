@@ -1,4 +1,6 @@
-public class State extends Functions {
+import utils.Functions;
+
+public class State {
     private byte[][] state;
 
     /**
@@ -22,7 +24,7 @@ public class State extends Functions {
     public void subBytes() {
         for (int i = 0; i < 4; i++) {
             for (int k = 0; k < 4; k++) {
-                state[k][i] = s_box(state[k][i]);
+                state[k][i] = Functions.s_box(state[k][i]);
             }
         }
     }
@@ -42,18 +44,18 @@ public class State extends Functions {
      * Shifts 3 of the rows
      */
     public void shiftRows() {
-        state[1] = rotWord(state[1], 1);
-        state[2] = rotWord(state[2], 2);
-        state[3] = rotWord(state[3], 3);
+        state[1] = Functions.rotWord(state[1], 1);
+        state[2] = Functions.rotWord(state[2], 2);
+        state[3] = Functions.rotWord(state[3], 3);
     }
 
     /**
      * Shifts 3 of the rows back
      */
     public void invShiftRows() {
-        state[1] = rotWord(state[1], 3);
-        state[2] = rotWord(state[2], 2);
-        state[3] = rotWord(state[3], 1);
+        state[1] = Functions.rotWord(state[1], 3);
+        state[2] = Functions.rotWord(state[2], 2);
+        state[3] = Functions.rotWord(state[3], 1);
     }
 
     /**

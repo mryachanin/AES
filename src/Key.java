@@ -1,10 +1,12 @@
 import java.util.Arrays;
 
+import utils.Functions;
+
 /**
  * Represents a key for an AES implementation
  *
  */
-public class Key extends Functions {
+public class Key {
     private byte[] key;
     private int keyCount;
     private int Nb, Nr, Nk;
@@ -49,10 +51,10 @@ public class Key extends Functions {
             }
 
             if (i % Nk == 0) {
-                temp = subWord(rotWord(temp, 1));
+                temp = Functions.subWord(Functions.rotWord(temp, 1));
                 temp = xorWords(temp, rCon(i / Nk));
             } else if (Nk > 6 && (i % Nk) == 4) {
-                temp = subWord(temp);
+                temp = Functions.subWord(temp);
             }
             for (int k = 4 * i; k < (4 * i) + 4; k++) {
                 this.key[k] = (byte) (this.key[k - (4 * Nk)] ^ temp[k % (4 * i)]); // k % 4*i produces 0, 1, 2, 3
@@ -76,7 +78,7 @@ public class Key extends Functions {
         byte[] roundConstant = new byte[4];
         byte xPow = 0x01;
         for (int i = 0; i < (pow - 1); i++) {
-            xPow = xtime(xPow);
+            xPow = Functions.xtime(xPow);
         }
         roundConstant[0] = xPow;
         roundConstant[1] = 0x00;
