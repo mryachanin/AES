@@ -3,8 +3,7 @@ import java.util.Arrays;
 import utils.Functions;
 
 /**
- * Represents a key for an AES implementation
- *
+ * This represents an expanded key for use with an AES implementation to encrypt or decrypt data.
  */
 public class Key {
     // The number of columns (32-bit words) comprising a State
@@ -15,11 +14,11 @@ public class Key {
     private int keyCount;
 
     /**
-     * Construct the key
+     * Construct a key.
      *
-     * @param key bytes representing the key
-     * @param Nr Number of rounds
-     * @param Nk Number of 32 bit words comprising the cipher key
+     * @param key The bytes that represent the key.
+     * @param Nr The number of rounds.
+     * @param Nk The number of 32 bit words comprising the cipher key.
      */
     public Key(byte[] key, int Nr, int Nk) {
         this.key = new byte[4 * Nb * (Nr + 1)];
@@ -31,8 +30,9 @@ public class Key {
     }
 
     /**
+     * Expands an initial key for use in encrypting or decrypting a message.
      *
-     * @param key bytes representing the initial key
+     * @param key The initial key in bytes.
      */
     private void keyExpansion(byte[] key) {
         byte[] temp = new byte[4];
@@ -64,15 +64,54 @@ public class Key {
         }
     }
 
+    /**
+     * Returns the fully expanded key.
+     *
+     * @return The fully expanded key.
+     */
     public byte[] getExpandedKey() {
         return this.key;
     }
 
     /**
-     * Takes int representing the power of x + 1
+     * Returns the next 16 bytes of the expanded key.
      *
-     * @param pow power of x + 1
-     * @return word representing {xPow}{00}{00}{00}
+     * @return The next 16 bytes of the expanded key.
+     */
+    public byte[] getEncryptKey() {
+        byte[] keyPart = Arrays.copyOfRange(this.key, keyCount, keyCount + 16);
+        keyCount += 16;
+        return keyPart;
+    }
+
+    /**
+     * Returns the previous 16 bytes of the expanded key.
+     *
+     * @return The previous 16 bites of the expanded key.
+     */
+    public byte[] getDecryptKey() {
+        byte[] keyPart = Arrays.copyOfRange(this.key, keyCount - 16, keyCount);
+        keyCount -= 16;
+        return keyPart;
+    }
+
+    /**
+     * Resets the index counter so the key can be used again to encrypt the next 16-bytes.
+     */
+    public void resetCounter() {
+        keyCount = 0;
+    }
+
+    /**
+     * Resets the index counter so the key can be used again to decrypt the next 16-bytes.
+     */
+    public void resetDecryptCounter() {
+        keyCount = 4 * Nb * (Nr + 1);
+    }
+
+    /**
+     * @param pow The power of x + 1.
+     * @return A word representing {xPow}{00}{00}{00}.
      *
      */
     private byte[] rCon(int pow) {
@@ -90,11 +129,11 @@ public class Key {
     }
 
     /**
-     * Takes in 2 words and xor's them
+     * Returns the xor of 2 words.
      *
-     * @param word1 first word
-     * @param word2 second word
-     * @return new word with new[i] = word1[i] xor word2[i]
+     * @param word1 A word.
+     * @param word2 A second word.
+     * @return A new word with new[i] = word1[i] ^ word2[i].
      */
     private byte[] xorWords(byte[] word1, byte[] word2) {
         byte[] result = new byte[4];
@@ -104,38 +143,5 @@ public class Key {
         }
 
         return result;
-    }
-
-    /**
-     * returns the next 16 bytes of the expanded key
-     *
-     * @return next 16 bites of the expanded key
-     */
-    public byte[] getKey() {
-        byte[] keyPart = Arrays.copyOfRange(this.key, keyCount, keyCount + 16);
-        keyCount += 16;
-        return keyPart;
-    }
-
-    /**
-     * returns the previous 16 bytes of the expanded key
-     *
-     * @return previous 16 bites of the expanded key
-     */
-    public byte[] getDecryptKey() {
-        byte[] keyPart = Arrays.copyOfRange(this.key, keyCount - 16, keyCount);
-        keyCount -= 16;
-        return keyPart;
-    }
-
-    /**
-     * Resets the index counter so the key can be used again to encrypt the next 16-bytes
-     */
-    public void resetCounter() {
-        keyCount = 0;
-    }
-
-    public void resetDecryptCounter() {
-        keyCount = 4 * Nb * (Nr + 1);
     }
 }

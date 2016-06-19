@@ -50,18 +50,18 @@ public class AES {
     }
 
     private static State encryptState(State state, Key key) {
-        state.addRoundKey(key.getKey());
+        state.addRoundKey(key.getEncryptKey());
         for (int k = 0; k < (key.Nr - 1); k++) {
             state.subBytes();
             state.shiftRows();
             state.mixColumns();
-            state.addRoundKey(key.getKey());
+            state.addRoundKey(key.getEncryptKey());
         }
 
         // final round does not include mixColumns()
         state.subBytes();
         state.shiftRows();
-        state.addRoundKey(key.getKey());
+        state.addRoundKey(key.getEncryptKey());
         return state;
     }
 
@@ -111,6 +111,12 @@ public class AES {
         return state;
     }
 
+    /**
+     * Constructs an expanded key to use for encrypting or decrypting a message.
+     *
+     * @param key The key to use. Supported key lengths are 16, 24, and 32 bytes (128, 192, 256 bits)
+     * @return The expanded key object.
+     */
     private static Key getKey(byte[] key) {
         int key_len = key.length;
 
