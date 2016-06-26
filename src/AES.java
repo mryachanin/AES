@@ -31,7 +31,7 @@ public class AES {
         }
         byte[] encrypted = new byte[encryptedLength];
 
-        Key m_key = getKey(key);
+        Key m_key = Key.getKey(key);
 
         // break up the byte array into 16-byte 2d arrays
         for (int i = 0; i < message.length; i += 16) {
@@ -76,7 +76,7 @@ public class AES {
         int decryptedLength = cipher.length;
         byte[] decrypted = new byte[decryptedLength];
 
-        Key m_key = getKey(key);
+        Key m_key = Key.getKey(key);
         m_key.resetDecryptCounter();
 
         // break up the byte array into 16-byte 2d arrays
@@ -109,24 +109,5 @@ public class AES {
         state.invSubBytes();
         state.addRoundKey(key.getDecryptKey());
         return state;
-    }
-
-    /**
-     * Constructs an expanded key to use for encrypting or decrypting a message.
-     *
-     * @param key The key to use. Supported key lengths are 16, 24, and 32 bytes (128, 192, 256 bits)
-     * @return The expanded key object.
-     */
-    private static Key getKey(byte[] key) {
-        int key_len = key.length;
-
-        if (key_len != 16 && key_len != 24 && key_len != 32) {
-            System.err.println("Invalid key size: " + key_len);
-            System.exit(1);
-        }
-
-        int Nk = key_len / 4;
-        int Nr = Nk + 6;
-        return new Key(key, Nr, Nk);
     }
 }

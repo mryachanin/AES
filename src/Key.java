@@ -14,19 +14,38 @@ public class Key {
     private int keyCount;
 
     /**
-     * Construct a key.
+     * Do not allow public instantiation.
      *
      * @param key The bytes that represent the key.
      * @param Nr The number of rounds.
      * @param Nk The number of 32 bit words comprising the cipher key.
      */
-    public Key(byte[] key, int Nr, int Nk) {
+    private Key(byte[] key, int Nr, int Nk) {
         this.key = new byte[4 * Nb * (Nr + 1)];
         this.keyCount = 0;
         this.Nr = Nr;
         this.Nk = Nk;
 
         keyExpansion(key);
+    }
+
+    /**
+     * Constructs an expanded key to use for encrypting or decrypting a message.
+     *
+     * @param key The key to use. Supported key lengths are 16, 24, and 32 bytes (128, 192, 256 bits)
+     * @return The expanded key object.
+     */
+    public static Key getKey(byte[] key) {
+        int key_len = key.length;
+
+        if (key_len != 16 && key_len != 24 && key_len != 32) {
+            System.err.println("Invalid key size: " + key_len);
+            System.exit(1);
+        }
+
+        int Nk = key_len / 4;
+        int Nr = Nk + 6;
+        return new Key(key, Nr, Nk);
     }
 
     /**
