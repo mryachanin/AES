@@ -7,35 +7,30 @@ import java.util.Arrays;
  * 00112233, it will be decrypted as 0011223300000000. This is not a problem with printing ASCII as '00' represents the null character and signifies the end of a
  * string anyways.
  */
-public class AES {
-
-    /**
-     * Do not allow instantiation.
-     */
-    private AES() {
-    }
+public class AesEcb implements Cipher {
 
     /**
      * Takes a message and returns the resulting ciphertext.
      *
-     * @param m A message to encrypt.
+     * @param plaintext A message to encrypt.
      * @param key A 128, 296, or 256-bit key to use as the symmetric key.
      * @return The encrypted plaintext.
      */
-    public static byte[] encrypt(byte[] message, byte[] key) {
+    @Override
+    public byte[] encrypt(byte[] plaintext, byte[] key) {
         int encryptedLength;
-        if ((message.length % 16) == 0) {
-            encryptedLength = message.length;
+        if ((plaintext.length % 16) == 0) {
+            encryptedLength = plaintext.length;
         } else {
-            encryptedLength = message.length + 16 - (message.length % 16);
+            encryptedLength = plaintext.length + 16 - (plaintext.length % 16);
         }
         byte[] encrypted = new byte[encryptedLength];
 
         Key m_key = Key.getKey(key);
 
         // break up the byte array into 16-byte 2d arrays
-        for (int i = 0; i < message.length; i += 16) {
-            State state = new State(Arrays.copyOfRange(message, i, i + 16));
+        for (int i = 0; i < plaintext.length; i += 16) {
+            State state = new State(Arrays.copyOfRange(plaintext, i, i + 16));
 
             byte[] stateBytes = encryptState(state, m_key).getBytes();
             for (int n = 0; n < 16; n++) {
@@ -66,22 +61,23 @@ public class AES {
     }
 
     /**
-     * Takes a cipher and returns the resulting plaintext.
+     * Takes ciphertext and returns the resulting plaintext.
      *
-     * @param cipher The cipher to decrypt.
+     * @param ciphertext The cipher to decrypt.
      * @param key A 128, 296, or 256-bit key to use as the symmetric key.
      * @return The decrypted ciphertext.
      */
-    public static byte[] decrypt(byte[] cipher, byte[] key) {
-        int decryptedLength = cipher.length;
+    @Override
+    public byte[] decrypt(byte[] ciphertext, byte[] key) {
+        int decryptedLength = ciphertext.length;
         byte[] decrypted = new byte[decryptedLength];
 
         Key m_key = Key.getKey(key);
         m_key.resetDecryptCounter();
 
         // break up the byte array into 16-byte 2d arrays
-        for (int i = 0; i < cipher.length; i += 16) {
-            State state = new State(Arrays.copyOfRange(cipher, i, i + 16));
+        for (int i = 0; i < ciphertext.length; i += 16) {
+            State state = new State(Arrays.copyOfRange(ciphertext, i, i + 16));
 
             byte[] stateBytes = decryptState(state, m_key).getBytes();
             for (int n = 0; n < 16; n++) {

@@ -5,7 +5,7 @@ import utils.StringHelper;
  * Class to test AES functions and display their output in a human readable manner
  *
  */
-public class AESPresentation {
+public class AesPresentation {
     private State state;
 
     /**
@@ -13,7 +13,7 @@ public class AESPresentation {
      *
      * @param b - byte[] holding some data
      */
-    public AESPresentation(byte[] b) {
+    public AesPresentation(byte[] b) {
         state = new State(b);
     }
 
@@ -99,7 +99,7 @@ public class AESPresentation {
         byte[] testBytes = StringHelper.hexStringToByteArray("00102030405060708090a0b0c0d0e0f0");
         // byte[] testKey = StringHelper.hexStringToByteArray("01010101010101010101010101010101");
         byte[] testKey = StringHelper.hexStringToByteArray("73576245245357634126541754748133");
-        AESPresentation aes = new AESPresentation(testBytes);
+        AesPresentation aes = new AesPresentation(testBytes);
 
         System.out.println("Initial Input: " + StringHelper.bytesToHex(testBytes));
         System.out.println("Initial Key:   " + StringHelper.bytesToHex(testKey));
