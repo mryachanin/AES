@@ -1,4 +1,9 @@
+package aes.modes.ecb;
 import java.util.Arrays;
+
+import aes.Cipher;
+import aes.Key;
+import aes.State;
 
 /**
  * An implementation of AES ECB mode.

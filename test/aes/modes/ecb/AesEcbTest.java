@@ -1,5 +1,9 @@
+package aes.modes.ecb;
 import org.junit.Assert;
 import org.junit.Test;
+
+import aes.AesFactory;
+import aes.modes.AesMode;
 
 public class AesEcbTest {
 
