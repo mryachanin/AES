@@ -72,10 +72,10 @@ public class Key {
             }
 
             if (i % Nk == 0) {
-                temp = Functions.subWord(Functions.rotWord(temp, 1));
+                temp = SBox.apply(Functions.rotWord(temp, 1));
                 temp = xorWords(temp, rCon(i / Nk));
             } else if (Nk > 6 && (i % Nk) == 4) {
-                temp = Functions.subWord(temp);
+                temp = SBox.apply(temp);
             }
             for (int k = 4 * i; k < (4 * i) + 4; k++) {
                 this.key[k] = (byte) (this.key[k - (4 * Nk)] ^ temp[k % (4 * i)]); // k % 4*i produces 0, 1, 2, 3

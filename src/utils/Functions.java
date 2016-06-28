@@ -1,4 +1,6 @@
 package utils;
+
+
 public class Functions {
 
     /**
@@ -108,60 +110,6 @@ public class Functions {
         }
 
         return in;
-    }
-
-    /**
-     * Takes a 4-byte input word and applies the S-box.
-     *
-     * @param in A 4 byte word.
-     * @return The input passed through the S-box.
-     */
-    public static byte[] subWord(byte[] in) {
-        for (int i = 0; i < 4; i++) {
-            in[i] = sBox(in[i]);
-        }
-        return in;
-    }
-
-    /**
-     * Takes a byte and applies the S-box.
-     *
-     * @param in A single byte.
-     * @return The input passed through the S-box.
-     */
-    public static byte sBox(byte in) {
-        byte inv = getMultInverse(in);
-        byte val = inv;
-        for (int i = 0; i < 8; i++) {
-            for (int j = 4; j < 8; j++) {
-                if (isBitSet(inv, (i + j) % 8)) {
-                    val ^= (0x01 << i);
-                }
-            }
-        }
-        return (byte) (val ^ 0x63);
-    }
-
-    /**
-     * Takes a byte and applies the inverse S-box.
-     *
-     * @param in A single byte.
-     * @return The input passed through the inverse S-box.
-     */
-    public static byte inverseSBox(byte in) {
-        byte val = 0x05;
-        for (int i = 0; i < 8; i++) {
-            if (isBitSet(in, (i + 2) % 8)) {
-                val ^= (0x01 << i);
-            }
-            if (isBitSet(in, (i + 5) % 8)) {
-                val ^= (0x01 << i);
-            }
-            if (isBitSet(in, (i + 7) % 8)) {
-                val ^= (0x01 << i);
-            }
-        }
-        return getMultInverse(val);
     }
 
     /**

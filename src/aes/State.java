@@ -55,7 +55,7 @@ public class State {
     public void subBytes() {
         for (int i = 0; i < 4; i++) {
             for (int k = 0; k < 4; k++) {
-                state[k][i] = Functions.sBox(state[k][i]);
+                state[k][i] = SBox.apply(state[k][i]);
             }
         }
     }
@@ -66,7 +66,7 @@ public class State {
     public void invSubBytes() {
         for (int i = 0; i < 4; i++) {
             for (int k = 0; k < 4; k++) {
-                state[k][i] = Functions.inverseSBox(state[k][i]);
+                state[k][i] = SBox.applyInverse(state[k][i]);
             }
         }
     }
