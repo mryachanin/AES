@@ -3,8 +3,14 @@ package aes;
 import org.junit.Assert;
 import org.junit.Test;
 
+/**
+ * Integration tests for expanding AES keys of lengths 128, 192, and 256 bits.
+ */
 public class KeyTest {
 
+    /**
+     * Test expanding a 128 bit key.
+     */
     @Test
     public void test128BitKeyExpansion() {
         byte[] seed = new byte[] { (byte) 0x69, (byte) 0x20, (byte) 0xe2, (byte) 0x99, (byte) 0xa5, (byte) 0x20, (byte) 0x2a, (byte) 0x6d, (byte) 0x65, (byte) 0x6e,
@@ -32,6 +38,9 @@ public class KeyTest {
         Assert.assertArrayEquals(expandedKey, key.getExpandedKey());
     }
 
+    /**
+     * Test expanding a 192 bit key.
+     */
     @Test
     public void test192BitKeyExpansion() {
         byte[] seed = new byte[] { (byte) 0x00, (byte) 0x01, (byte) 0x02, (byte) 0x03, (byte) 0x04, (byte) 0x05, (byte) 0x06, (byte) 0x07, (byte) 0x08, (byte) 0x09,
@@ -63,6 +72,9 @@ public class KeyTest {
         Assert.assertArrayEquals(expandedKey, key.getExpandedKey());
     }
 
+    /**
+     * Test expanding a 256 bit key.
+     */
     @Test
     public void test256BitKeyExpansion() {
         byte[] seed = new byte[] { (byte) 0x00, (byte) 0x01, (byte) 0x02, (byte) 0x03, (byte) 0x04, (byte) 0x05, (byte) 0x06, (byte) 0x07, (byte) 0x08, (byte) 0x09,

@@ -2,6 +2,15 @@ package aes;
 import utils.Functions;
 import utils.StringHelper;
 
+/**
+ * <p>
+ * State is an implementation of the State outlined in FIPS-197 for the Advanced Encryption Standard.
+ * </p>
+ *
+ * <p>
+ * The State consists of 4 rows each containing 4 bytes, resulting in a block length of 128 bits.
+ * </p>
+ */
 public class State {
     private byte[][] state;
 

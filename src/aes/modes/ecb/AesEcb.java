@@ -6,20 +6,20 @@ import aes.Key;
 import aes.State;
 
 /**
+ * <p>
  * An implementation of AES ECB mode.
+ * </p>
  *
- * NOTE: if the message is not a multiple of 16-bytes, this will zero extend the end of the message to a multiple of 16 bytes. For instance, if the message is
- * 00112233, it will be decrypted as 0011223300000000. This is not a problem with printing ASCII as '00' represents the null character and signifies the end of a
- * string anyways.
+ * <p>
+ * NOTE: if the message is not a multiple of 16-bytes, this will zero extend the end of the message to a multiple of 16
+ * bytes. For instance, if the message is 00112233, it will be decrypted as 0011223300000000. This is not a problem with
+ * printing ASCII as '00' represents the null character and signifies the end of a string anyways.
+ * </p>
  */
 public class AesEcb implements Cipher {
 
     /**
-     * Takes a message and returns the resulting ciphertext.
-     *
-     * @param plaintext A message to encrypt.
-     * @param key A 128, 296, or 256-bit key to use as the symmetric key.
-     * @return The encrypted plaintext.
+     * {@inheritDoc}
      */
     @Override
     public byte[] encrypt(byte[] plaintext, byte[] key) {
@@ -66,11 +66,7 @@ public class AesEcb implements Cipher {
     }
 
     /**
-     * Takes ciphertext and returns the resulting plaintext.
-     *
-     * @param ciphertext The cipher to decrypt.
-     * @param key A 128, 296, or 256-bit key to use as the symmetric key.
-     * @return The decrypted ciphertext.
+     * {@inheritDoc}
      */
     @Override
     public byte[] decrypt(byte[] ciphertext, byte[] key) {

@@ -4,12 +4,29 @@ import java.util.Arrays;
 import utils.Functions;
 
 /**
- * This represents an expanded key for use with an AES implementation to encrypt or decrypt data.
+ * Key represents an expanded key as outlined in FIPS-197 for the Advanced Encryption Standard.
  */
 public class Key {
-    // The number of columns (32-bit words) comprising a State
+    /**
+     * The number of columns (32-bit words) comprising a State.
+     */
     public static final int Nb = 4;
-    public final int Nr, Nk;
+
+    /**
+     * <p>
+     * The number of rounds during encryption or decryption.
+     * </p>
+     *
+     * <p>
+     * Nr = 10 when Nk = 4, Nr = 12 when Nk = 6, and Nr = 14 when Nk = 8.
+     * </p>
+     */
+    public final int Nr;
+
+    /**
+     * The number of 32 bit words comprising the cipher key.
+     */
+    public final int Nk;
 
     private byte[] key;
     private int keyCount;
@@ -132,7 +149,6 @@ public class Key {
     /**
      * @param pow The power of x + 1.
      * @return A word representing {xPow}{00}{00}{00}.
-     *
      */
     private byte[] rCon(int pow) {
         byte[] roundConstant = new byte[4];
@@ -149,10 +165,10 @@ public class Key {
     }
 
     /**
-     * Returns the xor of 2 words.
+     * Returns word1 xor word2.
      *
      * @param word1 A word.
-     * @param word2 A second word.
+     * @param word2 A word.
      * @return A new word with new[i] = word1[i] ^ word2[i].
      */
     private byte[] xorWords(byte[] word1, byte[] word2) {
@@ -161,7 +177,6 @@ public class Key {
         for (int i = 0; i < 4; i++) {
             result[i] = (byte) (word1[i] ^ word2[i]);
         }
-
         return result;
     }
 }

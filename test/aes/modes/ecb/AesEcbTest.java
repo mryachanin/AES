@@ -5,8 +5,14 @@ import org.junit.Test;
 import aes.AesFactory;
 import aes.modes.AesMode;
 
+/**
+ * Integration tests for AES ECB encryption and decryption using keys of 128, 192, and 256 bits.
+ */
 public class AesEcbTest {
 
+    /**
+     * Test AES ECB encryption with a 128 bit key.
+     */
     @Test
     public void test128BitEncrypt() {
         byte[] key = new byte[] { (byte) 0x00, (byte) 0x01, (byte) 0x02, (byte) 0x03, (byte) 0x04, (byte) 0x05, (byte) 0x06, (byte) 0x07, (byte) 0x08, (byte) 0x09,
@@ -22,6 +28,9 @@ public class AesEcbTest {
         Assert.assertArrayEquals(expectedCiphertext, ciphertext);
     }
 
+    /**
+     * Test AES ECB encryption with a 192 bit key.
+     */
     @Test
     public void test192BitEncrypt() {
         byte[] key = new byte[] { (byte) 0x00, (byte) 0x01, (byte) 0x02, (byte) 0x03, (byte) 0x04, (byte) 0x05, (byte) 0x06, (byte) 0x07, (byte) 0x08, (byte) 0x09,
@@ -38,6 +47,9 @@ public class AesEcbTest {
         Assert.assertArrayEquals(expectedCiphertext, ciphertext);
     }
 
+    /**
+     * Test AES ECB encryption with a 256 bit key.
+     */
     @Test
     public void test256BitEncrypt() {
         byte[] key = new byte[] { (byte) 0x00, (byte) 0x01, (byte) 0x02, (byte) 0x03, (byte) 0x04, (byte) 0x05, (byte) 0x06, (byte) 0x07, (byte) 0x08, (byte) 0x09,
@@ -54,6 +66,9 @@ public class AesEcbTest {
         Assert.assertArrayEquals(expectedCiphertext, ciphertext);
     }
 
+    /**
+     * Test AES ECB decryption with a 128 bit key.
+     */
     @Test
     public void test128BitDecrypt() {
         byte[] key = new byte[] { (byte) 0x00, (byte) 0x01, (byte) 0x02, (byte) 0x03, (byte) 0x04, (byte) 0x05, (byte) 0x06, (byte) 0x07, (byte) 0x08, (byte) 0x09,
@@ -69,6 +84,9 @@ public class AesEcbTest {
         Assert.assertArrayEquals(expectedPlaintext, plaintext);
     }
 
+    /**
+     * Test AES ECB decryption with a 192 bit key.
+     */
     @Test
     public void test192BitDecrypt() {
         byte[] key = new byte[] { (byte) 0x00, (byte) 0x01, (byte) 0x02, (byte) 0x03, (byte) 0x04, (byte) 0x05, (byte) 0x06, (byte) 0x07, (byte) 0x08, (byte) 0x09,
@@ -85,6 +103,9 @@ public class AesEcbTest {
         Assert.assertArrayEquals(expectedPlaintext, plaintext);
     }
 
+    /**
+     * Test AES ECB decryption with a 256 bit key.
+     */
     @Test
     public void test256BitDecrypt() {
         byte[] key = new byte[] { (byte) 0x00, (byte) 0x01, (byte) 0x02, (byte) 0x03, (byte) 0x04, (byte) 0x05, (byte) 0x06, (byte) 0x07, (byte) 0x08, (byte) 0x09,

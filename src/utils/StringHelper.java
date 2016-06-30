@@ -1,5 +1,8 @@
 package utils;
 
+/**
+ * StringHelper contains static functions to convert between byte arrays and hex strings.
+ */
 public class StringHelper {
 
     /**

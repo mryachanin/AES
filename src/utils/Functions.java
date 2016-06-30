@@ -1,6 +1,8 @@
 package utils;
 
-
+/**
+ * Functions contains various static functions to assist with bit-manipulation.
+ */
 public class Functions {
 
     /**
